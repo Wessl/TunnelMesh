@@ -1,0 +1,11 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/contentModel.xml
+/.idea.TunnelMeshTest.iml
+/projectSettingsUpdater.xml
+# Datasource local storage ignored files
+/../../../../../../../../../:\Users\love\Documents\Github Desktop\TunnelMeshTest\.idea\.idea.TunnelMeshTest\.idea/dataSources/
+/dataSources.local.xml

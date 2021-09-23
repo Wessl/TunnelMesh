@@ -1,0 +1,5 @@
+todo:
+music
+procedurally placed lights that flash/lerp between brightness/colors based on bpm of music, could be placed in like a fun pattern along the ground. and parallel along players path maybe
+how about instead of just the normal boring one-off short pipes, one single long pipe that stretches along the whole thing on the ground or somethng? think like that one portal scene with wires and pipes hanging everywhere
+ok whaddabout this. one shader that procedurally generates sprites-ish that looks like background wall plates from the death star. like randy did for his uuh ground, but for walls. 
