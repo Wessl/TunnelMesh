@@ -19,6 +19,8 @@ public class PathGenerator : MonoBehaviour
     [SerializeField] private int meshFidelity;
     [SerializeField] private int tunnelLength;
     [SerializeField] private float tunnelWidth;
+    private float tunnelWidthCurrent;
+
     private Vector3[][] circlesToPoints;
 
     private List<Vector3> vertices;
@@ -28,6 +30,7 @@ public class PathGenerator : MonoBehaviour
 
     private void Setup()
     {
+        tunnelWidthCurrent = tunnelWidth;
         points = new List<Vector3>();
         points.Add(new Vector3(0,0,0));
         points.Add(new Vector3(tunnelLength,0,0));
@@ -145,9 +148,10 @@ public class PathGenerator : MonoBehaviour
     private List<Vector3> SubdivideMesh(Vector3 origin, Vector3 res, Vector3 lineBetween, Vector3 midPoint)
     {
         List<Vector3> outerPoints = new List<Vector3>();
+        tunnelWidthCurrent = GetTunnelWidth();
         for (int i = 0; i < 4; i++)
         {
-            res = Vector3.Cross(lineBetween, res).normalized * tunnelWidth;
+            res = Vector3.Cross(lineBetween, res).normalized * tunnelWidthCurrent;
             Vector3 outerPoint = midPoint + res;
             outerPoints.Add(outerPoint);
             //Debug.DrawLine(midPoint, outerPoint, Color.black, 5, false);
@@ -171,7 +175,7 @@ public class PathGenerator : MonoBehaviour
             Vector3 newVec = ((outerPoints[i] + outerPoints[(i+1)%loopTimes])-middle);
             newOuterPoints.Add(outerPoints[i]);
             // Create a normalized length along the vector between the middle and the new point
-            var BP = middle + (newVec - middle).normalized * tunnelWidth;
+            var BP = middle + (newVec - middle).normalized * tunnelWidthCurrent;
             newOuterPoints.Add(BP);
             //Debug.DrawLine(middle, BP, Color.yellow, 4);
         }
@@ -188,6 +192,21 @@ public class PathGenerator : MonoBehaviour
     private int GetTunnelSideAmount()
     {
         return (int)Math.Pow(2, meshFidelity + 2);
+    }
+
+    private float GetTunnelWidth()
+    {
+        float t = tunnelWidthCurrent += Random.Range(-0.5f, 0.5f);
+        if (t < tunnelWidth / 1.5f);
+        {
+            t = tunnelWidth / 1.5f;
+        }
+        if (t > tunnelWidth * 1.5f);
+        {
+            t = tunnelWidth * 1.5f;
+        }
+
+        return t;
     }
 
     private void SetLine()
