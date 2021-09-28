@@ -15,6 +15,9 @@ public class DecalGenerator : MonoBehaviour
     public GameObject organicBulb;
     [SerializeField] private int bulbSpread;
     [SerializeField] private int bulbRandomRange;
+    public GameObject frog;
+    [SerializeField] private int frogSpread;
+    [SerializeField] private int frogRandomRange;
 
     private int[] triangles;
     private Vector3[] vertices;
@@ -37,6 +40,7 @@ public class DecalGenerator : MonoBehaviour
         PlacePipes();
         PlaceLightPipes();
         PlaceBulbs();
+        PlaceFrogs();
     }
 
     private void PlacePipes()
@@ -76,6 +80,22 @@ public class DecalGenerator : MonoBehaviour
             GameObject genBulb = Instantiate(organicBulb, vertices[x], Quaternion.LookRotation(normals[x]));
             genBulb.transform.localScale += new Vector3(Random.Range(1, 5), Random.Range(1, 5), Random.Range(1, 5));
             genBulb.transform.parent = this.transform;
+            filledVertices[x] = true;
+            x += Random.Range(0, lightPipeRandomRange);
+        }
+    }
+    private void PlaceFrogs()
+    {
+        for (int x = 0; x < vertices.Length; x+=lightPipeSpread)
+        {
+            x = CheckFilledVertices(x);
+            GameObject genFrog = Instantiate(frog, vertices[x], Quaternion.LookRotation(normals[x]));
+            var f_rb = genFrog.GetComponent<Rigidbody>();
+            f_rb.constraints = RigidbodyConstraints.None;
+            genFrog.transform.Translate(genFrog.transform.forward * (genFrog.transform.localScale.x * 2f), Space.Self);
+            genFrog.transform.rotation = Quaternion.identity;
+            f_rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ ;
+            genFrog.transform.parent = this.transform;
             filledVertices[x] = true;
             x += Random.Range(0, lightPipeRandomRange);
         }

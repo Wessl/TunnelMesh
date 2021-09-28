@@ -143,6 +143,7 @@ public class PathGenerator : MonoBehaviour
             uvs[i] = new Vector2(vertices[i].x, vertices[i].z);
         }
         mesh.uv = uvs;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     private List<Vector3> SubdivideMesh(Vector3 origin, Vector3 res, Vector3 lineBetween, Vector3 midPoint)
