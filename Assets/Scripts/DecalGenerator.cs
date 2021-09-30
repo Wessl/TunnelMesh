@@ -19,6 +19,10 @@ public class DecalGenerator : MonoBehaviour
     [SerializeField] private int frogSpread;
     [SerializeField] private int frogRandomRange;
 
+    public PathGenerator pathGenerator;
+
+    private int startIterationAt;
+
     private int[] triangles;
     private Vector3[] vertices;
     private Vector3[] normals;
@@ -30,6 +34,9 @@ public class DecalGenerator : MonoBehaviour
 
     public void GenerateDecals()
     {
+        startIterationAt = pathGenerator.GetTunnelFrontViewEdgeAmount();
+        Debug.Log("Ignoring the first " + startIterationAt + " vertices of the mesh (Nothing should spawn before the mesh itself starts)");
+        
         triangles = _pathGenMesh.triangles;
         vertices = _pathGenMesh.vertices;
         normals = _pathGenMesh.normals;
@@ -40,12 +47,12 @@ public class DecalGenerator : MonoBehaviour
         PlacePipes();
         PlaceLightPipes();
         PlaceBulbs();
-        PlaceFrogs();
+        //PlaceFrogs();
     }
 
     private void PlacePipes()
     {
-        for (int x = 0; x < vertices.Length; x+=pipeSpread)
+        for (int x = startIterationAt; x < vertices.Length; x+=pipeSpread)
         {
             x = CheckFilledVertices(x);
             GameObject genPipe = Instantiate(pipe, vertices[x], Quaternion.LookRotation(normals[x]));
@@ -60,7 +67,7 @@ public class DecalGenerator : MonoBehaviour
 
     private void PlaceLightPipes()
     {
-        for (int x = 0; x < vertices.Length; x+=lightPipeSpread)
+        for (int x = startIterationAt; x < vertices.Length; x+=lightPipeSpread)
         {
             x = CheckFilledVertices(x);
             GameObject genLight = Instantiate(lightPipe, vertices[x], Quaternion.LookRotation(normals[x]));
@@ -74,7 +81,7 @@ public class DecalGenerator : MonoBehaviour
 
     private void PlaceBulbs()
     {
-        for (int x = 0; x < vertices.Length; x+=lightPipeSpread)
+        for (int x = startIterationAt; x < vertices.Length; x+=lightPipeSpread)
         {
             x = CheckFilledVertices(x);
             GameObject genBulb = Instantiate(organicBulb, vertices[x], Quaternion.LookRotation(normals[x]));
@@ -86,7 +93,7 @@ public class DecalGenerator : MonoBehaviour
     }
     private void PlaceFrogs()
     {
-        for (int x = 0; x < vertices.Length; x+=lightPipeSpread)
+        for (int x = startIterationAt; x < vertices.Length; x+=lightPipeSpread)
         {
             x = CheckFilledVertices(x);
             GameObject genFrog = Instantiate(frog, vertices[x], Quaternion.LookRotation(normals[x]));

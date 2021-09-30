@@ -14,6 +14,7 @@ public class AirplaneController : MonoBehaviour
     private float _sfxVolume;
     // Plane movement variables
     public float forwardSpeed = 25f, strafeSpeed = 7.5f, hoverSpeed = 5f;
+    public float startSpeed;
     private float _activeForwardSpeed, _activeStrafeSpeed, _activeHoverSpeed;
     private float _forwardAcceleration = 2.5f, _strafeAcceleration = 2f, _hoverAcceleration = 2f;
     public float lookRateSpeed = 90f;
@@ -22,11 +23,21 @@ public class AirplaneController : MonoBehaviour
     private float rollInput;
     public float rollSpeed = 90f, rollAcceleration = 3.5f;
 
+    public float incSpeedAmountPerSec;
+
+    public Material engineExhaustRendererMat;
+    public string engineLightStrRef;
+
+    
+
     void Start()
     {
+        _activeForwardSpeed = startSpeed;
         screenCenter.x = Screen.width / 2f;
         screenCenter.y = Screen.height / 2f;
         Cursor.lockState = CursorLockMode.Confined;
+        InvokeRepeating("IncreaseSpeed", 0f, 0.5f);
+        
     }
 
     void Update()
@@ -41,12 +52,18 @@ public class AirplaneController : MonoBehaviour
         // Align plane towards mouse position & apply potential roll input
         transform.Rotate(-mouseDistance.y * lookRateSpeed * Time.deltaTime, mouseDistance.x * lookRateSpeed * Time.deltaTime, rollInput * rollSpeed * Time.deltaTime, Space.Self);
 
-        _activeForwardSpeed = Mathf.Lerp(_activeForwardSpeed, Input.GetAxisRaw("Vertical") * forwardSpeed, _forwardAcceleration * Time.deltaTime);
+        //_activeForwardSpeed = Mathf.Lerp(_activeForwardSpeed, Input.GetAxisRaw("Vertical") * forwardSpeed, _forwardAcceleration * Time.deltaTime);
         _activeStrafeSpeed = Mathf.Lerp(_activeStrafeSpeed, Input.GetAxisRaw("Horizontal") * strafeSpeed, _strafeAcceleration * Time.deltaTime);
         _activeHoverSpeed = Mathf.Lerp(_activeHoverSpeed, Input.GetAxisRaw("Hover") * hoverSpeed, _hoverAcceleration * Time.deltaTime);
         
         transform.position += _activeForwardSpeed * Time.deltaTime * transform.forward;
         transform.position += _activeStrafeSpeed * Time.deltaTime * transform.right;
         transform.position += _activeHoverSpeed * Time.deltaTime * transform.up;
+    }
+
+    private void IncreaseSpeed()
+    {
+        _activeForwardSpeed += incSpeedAmountPerSec;
+        engineExhaustRendererMat.SetFloat(engineLightStrRef, _activeForwardSpeed / 100);
     }
 }

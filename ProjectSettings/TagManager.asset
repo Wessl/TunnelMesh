@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Decal
   - Conductor
+  - Tunnel
   layers:
   - Default
   - TransparentFX

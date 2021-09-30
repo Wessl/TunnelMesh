@@ -38,7 +38,7 @@ public class FlashingLight : MonoBehaviour
             lastbeat += crotchet;
         }
         colortimer += Time.deltaTime;
-        matColorStrength = Mathf.Lerp(1f, 0.0f, colortimer/colorduration);
+        matColorStrength = Mathf.Lerp(1f, 0.3f, colortimer/colorduration);
         material.SetFloat(lightStrRef, matColorStrength);
     }
 

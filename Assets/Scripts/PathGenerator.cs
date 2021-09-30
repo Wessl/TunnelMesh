@@ -13,6 +13,7 @@ public class PathGenerator : MonoBehaviour
 {
     public LineRenderer lineRenderer;
     public bool autoUpdate = true;
+    [Tooltip("The points to use for the linerenderers' points. ")]
     private List<Vector3> points;
     public float incAmount = 10;
     [Tooltip("How many times do you want to subdivide the outer mesh (more = higher fidelity)")]
@@ -33,7 +34,7 @@ public class PathGenerator : MonoBehaviour
         tunnelWidthCurrent = tunnelWidth;
         points = new List<Vector3>();
         points.Add(new Vector3(0,0,0));
-        points.Add(new Vector3(tunnelLength,0,0));
+        points.Add(new Vector3(incAmount,0,0));
         SetLine();
         // set up mesh
         mesh = new Mesh();
@@ -41,10 +42,10 @@ public class PathGenerator : MonoBehaviour
         vertices = new List<Vector3>();
         triangles = new List<int>();
         // There is one "circle" in 2d space per tunnelLength, each of which has a set amount of sides (4,8,16...)
-        circlesToPoints = new Vector3[tunnelLength][];
-        for (int i = 0; i < tunnelLength; i++)
+        circlesToPoints = new Vector3[tunnelLength-1][];
+        for (int i = 0; i < tunnelLength-1; i++)
         {
-            circlesToPoints[i] = new Vector3[GetTunnelSideAmount()];
+            circlesToPoints[i] = new Vector3[GetTunnelFrontViewEdgeAmount()];
         }
     }
 
@@ -81,7 +82,7 @@ public class PathGenerator : MonoBehaviour
         Setup();
         for (int x = 1; x < tunnelLength; x++)
         {
-            Vector3 newPoint = (points[x] + new Vector3(incAmount, Random.Range(-incAmount*1.5f, incAmount*1.5f), Random.Range(-incAmount*1.5f, incAmount*1.5f)));
+            Vector3 newPoint = (points[x] + new Vector3(incAmount, Random.Range(-incAmount*1.4f, incAmount*1.4f), Random.Range(-incAmount*1.5f, incAmount*1.5f)));
             points.Add(newPoint);
         }
         SetLine();
@@ -99,7 +100,7 @@ public class PathGenerator : MonoBehaviour
             Vector3 midPoint = lineRenderer.GetPosition(x) - lineBetween.normalized * lineBetween.magnitude / 2;
             Vector3 res = Vector3.Cross(lineBetween, FindPerpendicular(lineBetween));
             List<Vector3> pointsOnCircle = SubdivideMesh(origin, res, lineBetween, midPoint);
-            circlesToPoints[x] = pointsOnCircle.ToArray();
+            circlesToPoints[x-1] = pointsOnCircle.ToArray();
         }
         // Now we have a line, with points on each midsegment extending out to form a circle. Now connect them. 
         CreateMesh();
@@ -116,9 +117,8 @@ public class PathGenerator : MonoBehaviour
             }   
         }
 
-        int rows = tunnelLength;
-        int cols = GetTunnelSideAmount();
-        Debug.Log("Vertices length: " + vertices.Count);
+        int rows = tunnelLength-1;
+        int cols = GetTunnelFrontViewEdgeAmount();
         for (int x = 0; x < rows-1; x++)
         {
             for (int y = 0; y < cols; y++)
@@ -153,6 +153,9 @@ public class PathGenerator : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             res = Vector3.Cross(lineBetween, res).normalized * tunnelWidthCurrent;
+            
+            Debug.Log("res length: "+ res.magnitude);
+            
             Vector3 outerPoint = midPoint + res;
             outerPoints.Add(outerPoint);
             //Debug.DrawLine(midPoint, outerPoint, Color.black, 5, false);
@@ -190,7 +193,7 @@ public class PathGenerator : MonoBehaviour
         return newOuterPoints;
     }
 
-    private int GetTunnelSideAmount()
+    public int GetTunnelFrontViewEdgeAmount()
     {
         return (int)Math.Pow(2, meshFidelity + 2);
     }
