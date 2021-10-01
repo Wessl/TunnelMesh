@@ -79,10 +79,14 @@ public class PathGenerator : MonoBehaviour
     // Entry method
     public void GeneratePath()
     {
+        Random.InitState((int)DateTime.Now.Ticks);      // Need to get a random seed or else the same map will be created every time
+
         Setup();
+        Debug.Log("Random state: " + Random.state.ToString());
         for (int x = 1; x < tunnelLength; x++)
         {
             Vector3 newPoint = (points[x] + new Vector3(incAmount, Random.Range(-incAmount*1.4f, incAmount*1.4f), Random.Range(-incAmount*1.5f, incAmount*1.5f)));
+            Debug.Log(newPoint);
             points.Add(newPoint);
         }
         SetLine();
@@ -154,8 +158,6 @@ public class PathGenerator : MonoBehaviour
         {
             res = Vector3.Cross(lineBetween, res).normalized * tunnelWidthCurrent;
             
-            Debug.Log("res length: "+ res.magnitude);
-            
             Vector3 outerPoint = midPoint + res;
             outerPoints.Add(outerPoint);
             //Debug.DrawLine(midPoint, outerPoint, Color.black, 5, false);
@@ -166,7 +168,6 @@ public class PathGenerator : MonoBehaviour
             // instead of this, cache the old vectors and loop through them and create intermediary
             outerPoints = FurtherMeshDivisions(lineBetween, outerPoints, midPoint, 1);
         }
-        Debug.Log("Okay im done here, returning you with the amount " + outerPoints.Count);
         return outerPoints;
     }
 

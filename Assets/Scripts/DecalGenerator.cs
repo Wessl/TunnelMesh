@@ -35,7 +35,6 @@ public class DecalGenerator : MonoBehaviour
     public void GenerateDecals()
     {
         startIterationAt = pathGenerator.GetTunnelFrontViewEdgeAmount();
-        Debug.Log("Ignoring the first " + startIterationAt + " vertices of the mesh (Nothing should spawn before the mesh itself starts)");
         
         triangles = _pathGenMesh.triangles;
         vertices = _pathGenMesh.vertices;
@@ -123,7 +122,6 @@ public class DecalGenerator : MonoBehaviour
         GameObject[] oldDecals = GameObject.FindGameObjectsWithTag("Decal");
         foreach (var decal in oldDecals)
         {
-            Debug.Log("removed decals");
             DestroyImmediate(decal);
         }
     }

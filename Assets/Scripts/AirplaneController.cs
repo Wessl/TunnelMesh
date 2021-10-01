@@ -23,11 +23,12 @@ public class AirplaneController : MonoBehaviour
     private float rollInput;
     public float rollSpeed = 90f, rollAcceleration = 3.5f;
 
-    public float incSpeedAmountPerSec;
+    public float incSpeedAmountPerUnitOfTime;
 
     public Material engineExhaustRendererMat;
     public string engineLightStrRef;
 
+    public GameManager gameManager;
     
 
     void Start()
@@ -63,7 +64,8 @@ public class AirplaneController : MonoBehaviour
 
     private void IncreaseSpeed()
     {
-        _activeForwardSpeed += incSpeedAmountPerSec;
+        _activeForwardSpeed += incSpeedAmountPerUnitOfTime;
         engineExhaustRendererMat.SetFloat(engineLightStrRef, _activeForwardSpeed / 100);
+        gameManager.SetSpedometer(_activeForwardSpeed);
     }
 }

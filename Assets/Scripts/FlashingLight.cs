@@ -29,6 +29,7 @@ public class FlashingLight : MonoBehaviour
         matColorStrength = material.GetFloat(lightStrRef);
         lastbeat = 0;
         crotchet = 60 / bpm;
+        
     }
 
     void Update(){

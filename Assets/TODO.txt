@@ -5,3 +5,9 @@ how about instead of just the normal boring one-off short pipes, one single long
 ok whaddabout this. one shader that procedurally generates sprites-ish that looks like background wall plates from the death star. like randy did for his uuh ground, but for walls. 
 a small 3d critter running along the walls 
 cool light streak behind you
+spedometer thats like an actual circle with an arrow
+restart button
+ui that shows you where center of screen is?
+make it feel like you are going faster, screen shake? also incrased global voluime?
+explodesion on death
+you can only play the game once?  : =)  ) ))  ) )

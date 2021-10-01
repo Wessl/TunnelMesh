@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,10 @@ public class WorldGenerator : MonoBehaviour
         // Generate decals that sit on the mesh
         decalGenRef.PathGenMesh = pathGenRef.Mesh;
         decalGenRef.GenerateDecals();
-        
+    }
+
+    private void Awake()
+    {
+        GenerateWorld();
     }
 }
