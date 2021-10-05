@@ -66,6 +66,6 @@ public class AirplaneController : MonoBehaviour
     {
         _activeForwardSpeed += incSpeedAmountPerUnitOfTime;
         engineExhaustRendererMat.SetFloat(engineLightStrRef, _activeForwardSpeed / 100);
-        gameManager.SetSpedometer(_activeForwardSpeed);
+        gameManager.HandleSpeedIncrease(_activeForwardSpeed);
     }
 }

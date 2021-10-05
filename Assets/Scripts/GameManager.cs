@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     private FilmGrain _filmGrain;
     private ColorAdjustments _colorAdjustments;
     private LensDistortion _lensDistortion;
+    public Transform spedometerDial;
 
     private float currentSpeed;
     
@@ -38,14 +39,14 @@ public class GameManager : MonoBehaviour
         deathScreen.GetComponent<TextMeshProUGUI>().text = "YOU SURVIVED FOR " + secondsSurvived.ToString("N") + " SECONDS";
     }
 
-    public void SetSpedometer(float speed)
+    public void HandleSpeedIncrease(float speed)
     {
+        // Set spedometer
         currentSpeed = speed;
         spedometerText.text = (3 * speed).ToString("N1") + "km/h";
+        spedometerDial.RotateAround(spedometerDial.position, Vector3.back, currentSpeed / 600);
         
-        // Do some other stuff whenever speed is raised
-        // better ways: listeners/events or renaming this function
-
+        // Set GlobalVolume effects
         if (_filmGrain != null)
         {
             _filmGrain.intensity.value = currentSpeed / 100;
