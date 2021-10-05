@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
     private ColorAdjustments _colorAdjustments;
     private LensDistortion _lensDistortion;
     public Transform spedometerDial;
+    
+    public GameObject pausePanel;
+    private bool isPaused;
 
     private float currentSpeed;
     
@@ -44,7 +47,7 @@ public class GameManager : MonoBehaviour
         // Set spedometer
         currentSpeed = speed;
         spedometerText.text = (3 * speed).ToString("N1") + "km/h";
-        spedometerDial.RotateAround(spedometerDial.position, Vector3.back, currentSpeed / 600);
+        spedometerDial.RotateAround(spedometerDial.position, Vector3.back, currentSpeed / 160);
         
         // Set GlobalVolume effects
         if (_filmGrain != null)
@@ -55,13 +58,29 @@ public class GameManager : MonoBehaviour
         if (_colorAdjustments != null)
         {
             _colorAdjustments.saturation.value = currentSpeed / 2;
-            _colorAdjustments.hueShift.value = currentSpeed;
+            //_colorAdjustments.hueShift.value = currentSpeed;
             _colorAdjustments.contrast.value = currentSpeed / 2;
         }
 
         if (_lensDistortion != null)
         {
             _lensDistortion.intensity.value = -currentSpeed / 200;
+        }
+    }
+
+    public void Pause()
+    {
+        if (isPaused)
+        {
+            isPaused = false;
+            Time.timeScale = 1;
+            pausePanel.SetActive(false);
+        }
+        else
+        {
+            isPaused = true;
+            Time.timeScale = 0;
+            pausePanel.SetActive(true);
         }
     }
 

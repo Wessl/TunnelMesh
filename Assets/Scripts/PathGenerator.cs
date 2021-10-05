@@ -86,7 +86,6 @@ public class PathGenerator : MonoBehaviour
         for (int x = 1; x < tunnelLength; x++)
         {
             Vector3 newPoint = (points[x] + new Vector3(incAmount, Random.Range(-incAmount*1.4f, incAmount*1.4f), Random.Range(-incAmount*1.5f, incAmount*1.5f)));
-            Debug.Log(newPoint);
             points.Add(newPoint);
         }
         SetLine();
