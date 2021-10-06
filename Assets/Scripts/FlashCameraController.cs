@@ -19,22 +19,25 @@ public class FlashCameraController : MonoBehaviour
     public Volume globalVolume;
     private ColorAdjustments _colorAdjustments;
     private PaniniProjection _panini;
+    private Vignette _vignette;
 
     public int beatsUntilDrop;
     private int currentBeats;
     private bool beatHasDropped;
+    public Material tunnelBGMateral;
 
-    [SerializeField] private string lightStrRef;
+    [SerializeField] private string noiseInfluenceStrRef;
 
     void Start()
     {
         globalVolume.profile.TryGet(out _colorAdjustments);
         globalVolume.profile.TryGet(out _panini);
+        globalVolume.profile.TryGet(out _vignette);
         conductor = GameObject.FindWithTag("Conductor").GetComponent<Conductor>();
         bpm = conductor.Bpm;
         lastbeat = 0;
         crotchet = 60 / bpm;
-        
+        tunnelBGMateral.SetFloat(noiseInfluenceStrRef, 0);
     }
 
 
@@ -56,6 +59,9 @@ public class FlashCameraController : MonoBehaviour
         if (beatHasDropped)
         {
             _panini.distance.value = Mathf.Lerp(0.2f, 0.0f, colortimer/colorduration);
+            _vignette.intensity.value = Mathf.Lerp(0.25f, 0.0f, colortimer / colorduration);
+            var noiseInfluenceStrength = Mathf.Lerp(0.0f, 5f, colortimer/colorduration);
+            tunnelBGMateral.SetFloat(noiseInfluenceStrRef, noiseInfluenceStrength);
         }
     }
 
