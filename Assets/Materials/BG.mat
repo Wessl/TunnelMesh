@@ -91,6 +91,7 @@ Material:
     - Vector1_2b01ecbd98ed405489641c116b00de50: 1
     - Vector1_71e5b53e00da4d15938135f108203df1: 1
     - Vector1_75f50752ff11435892087276e19cec29: 0
+    - Vector1_c88424ad32994543beb7c8d269af693c: 0
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -107,7 +108,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
-    - _NoiseInfluenceRef: 3.4151099
+    - _NoiseInfluenceRef: 1.7913275
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
@@ -117,6 +118,8 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
+    - _TextureScrollSpeed: 1
+    - _TwirlStrength: 1
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:

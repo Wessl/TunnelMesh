@@ -27,6 +27,9 @@ public class FlashCameraController : MonoBehaviour
     public Material tunnelBGMateral;
 
     [SerializeField] private string noiseInfluenceStrRef;
+    [SerializeField] private string textureScrollSpeedRef;
+    [SerializeField] private string twirlStrengthRef;
+
 
     void Start()
     {
@@ -37,7 +40,10 @@ public class FlashCameraController : MonoBehaviour
         bpm = conductor.Bpm;
         lastbeat = 0;
         crotchet = 60 / bpm;
+        // Make sure material float references are set to default values on start
         tunnelBGMateral.SetFloat(noiseInfluenceStrRef, 0);
+        tunnelBGMateral.SetFloat(textureScrollSpeedRef, 0);
+        tunnelBGMateral.SetFloat(twirlStrengthRef, 0);
     }
 
 
@@ -58,10 +64,12 @@ public class FlashCameraController : MonoBehaviour
 
         if (beatHasDropped)
         {
-            _panini.distance.value = Mathf.Lerp(0.2f, 0.0f, colortimer/colorduration);
+            _panini.distance.value = Mathf.Lerp(0.3f, 0.0f, colortimer/colorduration);
             _vignette.intensity.value = Mathf.Lerp(0.25f, 0.0f, colortimer / colorduration);
             var noiseInfluenceStrength = Mathf.Lerp(0.0f, 5f, colortimer/colorduration);
             tunnelBGMateral.SetFloat(noiseInfluenceStrRef, noiseInfluenceStrength);
+            tunnelBGMateral.SetFloat(textureScrollSpeedRef, 1);
+            tunnelBGMateral.SetFloat(twirlStrengthRef, 1f);
         }
     }
 

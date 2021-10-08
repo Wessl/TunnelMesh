@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         // Set GlobalVolume effects
         if (_filmGrain != null)
         {
-            _filmGrain.intensity.value = currentSpeed / 100;
+            //_filmGrain.intensity.value = currentSpeed / 100;
         }
 
         if (_colorAdjustments != null)
