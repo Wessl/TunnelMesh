@@ -108,7 +108,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
-    - _NoiseInfluenceRef: 1.7913275
+    - _NoiseInfluenceRef: 1.3885412
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
@@ -124,7 +124,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Vector2_2f711ee6183643d48c39a15c7cd2526c: {r: 1, g: 1, b: 1, a: 0}
-    - Vector2_6e2e5d98fe0248b0887cba98d06bda18: {r: 0.2, g: 0.2, b: 0.2, a: 0.2}
+    - Vector2_6e2e5d98fe0248b0887cba98d06bda18: {r: 0.1, g: 0.1, b: 0.1, a: 0.1}
     - Vector2_923300274ffb46a1bb2dcc0874ce4d20: {r: 0.1, g: 0.1, b: 0.1, a: 0.1}
     - Vector3_b8336547f09a4a5bb758335d21dadbfe: {r: 0, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 0.23584908, g: 0.22142974, b: 0.14128695, a: 1}

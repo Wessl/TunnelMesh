@@ -10,6 +10,7 @@ public class FlashCameraController : MonoBehaviour
     public static float colortimer = 0.0f;
     public float colorduration = 0.4F;
     public Conductor conductor;
+    public GameObject exhaustFumes;
     
     float lastbeat; //this is the ‘moving reference point’
 
@@ -56,6 +57,7 @@ public class FlashCameraController : MonoBehaviour
             if (currentBeats == beatsUntilDrop)
             {
                 beatHasDropped = true;
+                exhaustFumes.SetActive(true);
             }
             Flash(beatHasDropped);
             lastbeat += crotchet;
