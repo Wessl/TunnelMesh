@@ -54705,9 +54705,13 @@ MonoBehaviour:
   globalVolume: {fileID: 1860096178}
   beatsUntilDrop: 133
   tunnelBGMateral: {fileID: 2100000, guid: 9bc5aa2e8b2ae5d41be5edf0fd98b0fa, type: 2}
+  caveTextureNormal: {fileID: 2800000, guid: ef14a462f5a45194db39f6db45190e1f, type: 3}
+  caveTexturePsychedelic: {fileID: 2800000, guid: 7f7d8bf4af2578d4794e1f4327cf25d6, type: 3}
   noiseInfluenceStrRef: _NoiseInfluenceRef
   textureScrollSpeedRef: _TextureScrollSpeed
   twirlStrengthRef: _TwirlStrength
+  caveTextureRef: _CaveTexture
+  cloudTilingRef: _CloudTiling
 --- !u!4 &985439073
 Transform:
   m_ObjectHideFlags: 0

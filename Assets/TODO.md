@@ -18,3 +18,4 @@
 
 * you can only play the game once?  or not idk
 * upload highscores to web server?
+* new model

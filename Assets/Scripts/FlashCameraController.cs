@@ -26,10 +26,14 @@ public class FlashCameraController : MonoBehaviour
     private int currentBeats;
     private bool beatHasDropped;
     public Material tunnelBGMateral;
+    public Texture2D caveTextureNormal;
+    public Texture2D caveTexturePsychedelic;
 
     [SerializeField] private string noiseInfluenceStrRef;
     [SerializeField] private string textureScrollSpeedRef;
     [SerializeField] private string twirlStrengthRef;
+    [SerializeField] private string caveTextureRef;
+    [SerializeField] private string cloudTilingRef;
 
 
     void Start()
@@ -45,6 +49,8 @@ public class FlashCameraController : MonoBehaviour
         tunnelBGMateral.SetFloat(noiseInfluenceStrRef, 0);
         tunnelBGMateral.SetFloat(textureScrollSpeedRef, 0);
         tunnelBGMateral.SetFloat(twirlStrengthRef, 0);
+        tunnelBGMateral.SetTexture(caveTextureRef, caveTextureNormal);
+        tunnelBGMateral.SetVector(cloudTilingRef, new Vector4(0.1f, 0.1f, 0, 0));
     }
 
 
@@ -56,8 +62,11 @@ public class FlashCameraController : MonoBehaviour
             currentBeats++;
             if (currentBeats == beatsUntilDrop)
             {
+                // Drop the beat
                 beatHasDropped = true;
                 exhaustFumes.SetActive(true);
+                tunnelBGMateral.SetTexture(caveTextureRef, caveTexturePsychedelic);
+                tunnelBGMateral.SetVector(cloudTilingRef, new Vector4(0.025f, 0.025f, 0, 0));
             }
             Flash(beatHasDropped);
             lastbeat += crotchet;
@@ -70,7 +79,7 @@ public class FlashCameraController : MonoBehaviour
             _vignette.intensity.value = Mathf.Lerp(0.25f, 0.0f, colortimer / colorduration);
             var noiseInfluenceStrength = Mathf.Lerp(0.0f, 5f, colortimer/colorduration);
             tunnelBGMateral.SetFloat(noiseInfluenceStrRef, noiseInfluenceStrength);
-            tunnelBGMateral.SetFloat(textureScrollSpeedRef, 1);
+            tunnelBGMateral.SetFloat(textureScrollSpeedRef, 0.25f);
             tunnelBGMateral.SetFloat(twirlStrengthRef, 1f);
         }
     }
