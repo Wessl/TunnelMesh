@@ -34,6 +34,10 @@ public class DecalGenerator : MonoBehaviour
 
     public void GenerateDecals()
     {
+        pipeSpread *= pathGenerator.MeshFidelity;
+        lightPipeSpread *= pathGenerator.MeshFidelity;
+        bulbSpread *= pathGenerator.MeshFidelity;
+        
         startIterationAt = pathGenerator.GetTunnelFrontViewEdgeAmount();
         
         triangles = _pathGenMesh.triangles;
@@ -80,14 +84,14 @@ public class DecalGenerator : MonoBehaviour
 
     private void PlaceBulbs()
     {
-        for (int x = startIterationAt; x < vertices.Length; x+=lightPipeSpread)
+        for (int x = startIterationAt; x < vertices.Length; x+=bulbSpread)
         {
             x = CheckFilledVertices(x);
             GameObject genBulb = Instantiate(organicBulb, vertices[x], Quaternion.LookRotation(normals[x]));
             genBulb.transform.localScale += new Vector3(Random.Range(1, 5), Random.Range(1, 5), Random.Range(1, 5));
             genBulb.transform.parent = this.transform;
             filledVertices[x] = true;
-            x += Random.Range(0, lightPipeRandomRange);
+            x += Random.Range(0, bulbRandomRange);
         }
     }
     private void PlaceFrogs()

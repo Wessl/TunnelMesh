@@ -201,9 +201,9 @@ public class PathGenerator : MonoBehaviour
     private float GetTunnelWidth()
     {
         float t = tunnelWidthCurrent += Random.Range(-0.5f, 0.5f);
-        if (t < tunnelWidth / 1.5f);
+        if (t < tunnelWidth / 1.25f);
         {
-            t = tunnelWidth / 1.5f;
+            t = tunnelWidth / 1.25f;
         }
         if (t > tunnelWidth * 1.5f);
         {
@@ -220,5 +220,7 @@ public class PathGenerator : MonoBehaviour
     }
 
     public Mesh Mesh => mesh;
+
+    public int MeshFidelity => meshFidelity;
 
 }

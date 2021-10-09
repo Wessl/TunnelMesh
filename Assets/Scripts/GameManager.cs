@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
 
         if (_colorAdjustments != null)
         {
-            _colorAdjustments.saturation.value = currentSpeed / 2;
+            _colorAdjustments.hueShift.value = currentSpeed / 2;
             //_colorAdjustments.hueShift.value = currentSpeed;
             _colorAdjustments.contrast.value = currentSpeed / 2;
         }
@@ -86,6 +86,6 @@ public class GameManager : MonoBehaviour
 
     public void PlayAgainButton()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
