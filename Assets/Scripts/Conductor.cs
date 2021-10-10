@@ -30,11 +30,11 @@ public class Conductor : MonoBehaviour
         if (!hasOffsetAdjusted)
         {
             if (Application.platform == RuntimePlatform.OSXPlayer)
-                offset = 0.35f;
+                offset += 0.35f;
             if (Application.platform == RuntimePlatform.WindowsPlayer)
-                offset = 0.45f;
+                offset += 0.45f;
             if (Application.platform == RuntimePlatform.WebGLPlayer)
-                offset = 0.35f; // Extremely somewhat arbitrary values that I found online that may be incorrect I don't know
+                offset += 0.35f; // Extremely somewhat arbitrary values that I found online that may be incorrect I don't know
         }
         
         WaitForSongReadCompletion();

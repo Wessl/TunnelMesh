@@ -50,21 +50,16 @@ public class GameManager : MonoBehaviour
         spedometerDial.RotateAround(spedometerDial.position, Vector3.back, currentSpeed / 160);
         
         // Set GlobalVolume effects
-        if (_filmGrain != null)
-        {
-            //_filmGrain.intensity.value = currentSpeed / 100;
-        }
-
         if (_colorAdjustments != null)
         {
             _colorAdjustments.hueShift.value = currentSpeed / 2;
-            //_colorAdjustments.hueShift.value = currentSpeed;
             _colorAdjustments.contrast.value = currentSpeed / 2;
+            // Hue shift is also set, but is instead handled through FlashCameraController since I only want it to occur after a beat drop
         }
 
         if (_lensDistortion != null)
         {
-            _lensDistortion.intensity.value = -currentSpeed / 200;
+            _lensDistortion.intensity.value = -currentSpeed / 100;
         }
     }
 

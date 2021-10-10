@@ -34,9 +34,10 @@ public class DecalGenerator : MonoBehaviour
 
     public void GenerateDecals()
     {
-        pipeSpread *= pathGenerator.MeshFidelity;
-        lightPipeSpread *= pathGenerator.MeshFidelity;
-        bulbSpread *= pathGenerator.MeshFidelity;
+        // Make the spread independent of how dense the mesh fidelity edges are
+        pipeSpread *= (pathGenerator.MeshFidelity + 1);
+        lightPipeSpread *= (pathGenerator.MeshFidelity + 1);
+        bulbSpread *= (pathGenerator.MeshFidelity + 1);
         
         startIterationAt = pathGenerator.GetTunnelFrontViewEdgeAmount();
         

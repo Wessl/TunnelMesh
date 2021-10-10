@@ -11,36 +11,38 @@ using Vector3 = UnityEngine.Vector3;
 [RequireComponent(typeof(MeshFilter))]
 public class PathGenerator : MonoBehaviour
 {
-    public LineRenderer lineRenderer;
-    public bool autoUpdate = true;
-    [Tooltip("The points to use for the linerenderers' points. ")]
-    private List<Vector3> points;
-    public float incAmount = 10;
+    [SerializeField] private LineRenderer lineRenderer;
+    [SerializeField] private float incAmount;   // How many units long will each tunnel segment be
     [Tooltip("How many times do you want to subdivide the outer mesh (more = higher fidelity)")]
     [SerializeField] private int meshFidelity;
     [SerializeField] private int tunnelLength;
     [SerializeField] private float tunnelWidth;
+    
     private float tunnelWidthCurrent;
-
-    private Vector3[][] circlesToPoints;
-
-    private List<Vector3> vertices;
-    private List<int> triangles;
-
+    private Vector3[][] circlesToPoints;    // Every "circle" needs to be mapped to an array of points that make up that circle
+    private List<Vector3> points;           // The points to use for drawing lines with the line renderer
+    private List<Vector3> vertices;         // A convenient list that contains every point that makes up every circle in order
+    private List<int> triangles;            // The definition of every triangle that will make up the mesh
     private Mesh mesh;
 
+    // Must be called first of all before generating a path
     private void Setup()
     {
         tunnelWidthCurrent = tunnelWidth;
+        
+        // Make a new list that has a default first line segment that is just from the origin straight forward
         points = new List<Vector3>();
         points.Add(new Vector3(0,0,0));
         points.Add(new Vector3(incAmount,0,0));
+        vertices = new List<Vector3>();
+        triangles = new List<int>();
+        
         SetLine();
+        
         // set up mesh
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-        vertices = new List<Vector3>();
-        triangles = new List<int>();
+
         // There is one "circle" in 2d space per tunnelLength, each of which has a set amount of sides (4,8,16...)
         circlesToPoints = new Vector3[tunnelLength-1][];
         for (int i = 0; i < tunnelLength-1; i++)
@@ -49,64 +51,39 @@ public class PathGenerator : MonoBehaviour
         }
     }
 
-    /**
-     * https://math.stackexchange.com/questions/133177/finding-a-unit-vector-perpendicular-to-another-vector
-     * @param xVec must be a nonzero vector
-     */
-    private Vector3 FindPerpendicular(Vector3 xVec)
-    {
-        if (xVec.magnitude.Equals(0))
-        {
-            throw new Exception("Must not supply nonzero vector to FindPerpendicular!");
-        }
-        Vector3 v = new Vector3(0, 0, 0);
-        int m, n;
-        m = n = 0;
-        for (int i = 0; i < 3; i++)
-        {
-            if (xVec[i] != 0)
-            {
-                m = i;
-                n = (i + 1) % 3;
-            }
-        }
-
-        v[n] = xVec[m];
-        v[m] = -xVec[n];
-        return v.normalized;
-    }
 
     // Entry method
     public void GeneratePath()
     {
-        Random.InitState((int)DateTime.Now.Ticks);      // Need to get a random seed or else the same map will be created every time
+        // Need to get a random seed or else the same map will be created every time the player restarts for example
+        Random.InitState((int)DateTime.Now.Ticks);      
 
         Setup();
-        Debug.Log("Random state: " + Random.state.ToString());
+        // Create the line segments that will define the center of the tunnel,
+        // by getting a new point incAmount forwards and a random point on the YZ plane some distance from the current center
         for (int x = 1; x < tunnelLength; x++)
         {
-            Vector3 newPoint = (points[x] + new Vector3(incAmount, Random.Range(-incAmount*1.4f, incAmount*1.4f), Random.Range(-incAmount*1.5f, incAmount*1.5f)));
+            Vector3 newPoint = (points[x] + new Vector3(incAmount, Random.Range(-incAmount*1.4f, incAmount*1.4f), Random.Range(-incAmount*1.4f, incAmount*1.4f)));
             points.Add(newPoint);
         }
         SetLine();
+        // Create every "circle" along each line segment
         CreateOutsideMeshPoints();
-        
+        // Now we have a line, with points on each midsegment extending out to form a circle. Now connect them. 
+        CreateMesh();
     }
 
     private void CreateOutsideMeshPoints()
     {
-        // start with just trying to create a line perpendicular to each line segment
         for (int x = 1; x < lineRenderer.positionCount - 1; x++)
         {
             Vector3 origin = lineRenderer.GetPosition(x - 1);
             Vector3 lineBetween = (lineRenderer.GetPosition(x) - origin);
             Vector3 midPoint = lineRenderer.GetPosition(x) - lineBetween.normalized * lineBetween.magnitude / 2;
             Vector3 res = Vector3.Cross(lineBetween, FindPerpendicular(lineBetween));
-            List<Vector3> pointsOnCircle = SubdivideMesh(origin, res, lineBetween, midPoint);
+            List<Vector3> pointsOnCircle = SubdivideMesh(res, lineBetween, midPoint);
             circlesToPoints[x-1] = pointsOnCircle.ToArray();
         }
-        // Now we have a line, with points on each midsegment extending out to form a circle. Now connect them. 
-        CreateMesh();
     }
 
     private void CreateMesh()
@@ -148,11 +125,12 @@ public class PathGenerator : MonoBehaviour
         mesh.uv = uvs;
         GetComponent<MeshCollider>().sharedMesh = mesh;
     }
-
-    private List<Vector3> SubdivideMesh(Vector3 origin, Vector3 res, Vector3 lineBetween, Vector3 midPoint)
+    
+    private List<Vector3> SubdivideMesh(Vector3 res, Vector3 lineBetween, Vector3 midPoint)
     {
         List<Vector3> outerPoints = new List<Vector3>();
         tunnelWidthCurrent = GetTunnelWidth();
+        // Create four points perpendicular to the lineBetween by utilizing the cross product
         for (int i = 0; i < 4; i++)
         {
             res = Vector3.Cross(lineBetween, res).normalized * tunnelWidthCurrent;
@@ -164,13 +142,14 @@ public class PathGenerator : MonoBehaviour
 
         if (meshFidelity > 0)
         {
-            // instead of this, cache the old vectors and loop through them and create intermediary
-            outerPoints = FurtherMeshDivisions(lineBetween, outerPoints, midPoint, 1);
+            // If the meshFidelity needs to be higher than just four points, go into recursive function that can do this
+            // based on these four points as a starting point
+            outerPoints = FurtherMeshDivisions(outerPoints, midPoint, 1);
         }
         return outerPoints;
     }
 
-    private List<Vector3> FurtherMeshDivisions(Vector3 lineBetween, List<Vector3> outerPoints, Vector3 middle, int iterations)
+    private List<Vector3> FurtherMeshDivisions(List<Vector3> outerPoints, Vector3 middle, int iterations)
     {
         List<Vector3> newOuterPoints = new List<Vector3>();
         int loopTimes = (int) Math.Pow(2,iterations+1);
@@ -187,7 +166,7 @@ public class PathGenerator : MonoBehaviour
         // Recursively call yourself with the old points to increase circlular fidelity
         if (iterations <= meshFidelity)
         {
-            newOuterPoints = FurtherMeshDivisions(lineBetween, newOuterPoints, middle, iterations);
+            newOuterPoints = FurtherMeshDivisions(newOuterPoints, middle, iterations);
         }
         
         return newOuterPoints;
@@ -213,6 +192,7 @@ public class PathGenerator : MonoBehaviour
         return t;
     }
 
+    // Tells the line renderer how many points there are and what those points are
     private void SetLine()
     {
         lineRenderer.positionCount = points.Count;
@@ -222,5 +202,33 @@ public class PathGenerator : MonoBehaviour
     public Mesh Mesh => mesh;
 
     public int MeshFidelity => meshFidelity;
+    
+    
+    /**
+     * https://math.stackexchange.com/questions/133177/finding-a-unit-vector-perpendicular-to-another-vector
+     * @param xVec must be a nonzero vector
+     */
+    private Vector3 FindPerpendicular(Vector3 xVec)
+    {
+        if (xVec.magnitude.Equals(0))
+        {
+            throw new Exception("Must not supply nonzero vector to FindPerpendicular!");
+        }
+        Vector3 v = new Vector3(0, 0, 0);
+        int m, n;
+        m = n = 0;
+        for (int i = 0; i < 3; i++)
+        {
+            if (xVec[i] != 0)
+            {
+                m = i;
+                n = (i + 1) % 3;
+            }
+        }
+
+        v[n] = xVec[m];
+        v[m] = -xVec[n];
+        return v.normalized;
+    }
 
 }

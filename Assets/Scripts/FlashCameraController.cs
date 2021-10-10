@@ -5,6 +5,12 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
+/**
+ * Handles every beat-synced global volume switch
+ * Has references to shader variables that are updated depending on Conductor song time
+ * Most changes occur only after a "beat drop" which has to be manually set (number of beats)
+ * Needs a camera with post-processing enabled
+ */
 public class FlashCameraController : MonoBehaviour
 {
     public static float colortimer = 0.0f;
@@ -51,6 +57,13 @@ public class FlashCameraController : MonoBehaviour
         tunnelBGMateral.SetFloat(twirlStrengthRef, 0);
         tunnelBGMateral.SetTexture(caveTextureRef, caveTextureNormal);
         tunnelBGMateral.SetVector(cloudTilingRef, new Vector4(0.1f, 0.1f, 0, 0));
+        
+        if (Application.platform == RuntimePlatform.OSXPlayer)
+            beatsUntilDrop--;
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
+            beatsUntilDrop--;
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+            beatsUntilDrop--; // Extremely somewhat arbitrary values that I found online that may be incorrect I don't know
     }
 
 
